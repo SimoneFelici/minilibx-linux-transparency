@@ -25,6 +25,8 @@ int	mlx_destroy_image(t_xvar *xvar, t_img *img)
   XFreePixmap(xvar->display, img->pix);
   if (img->gc)
     XFreeGC(xvar->display, img->gc);
+  if (img->clip_pix)
+    XFreePixmap(xvar->display, img->clip_pix);
   free(img);
   if (xvar->do_flush)
     XFlush(xvar->display);

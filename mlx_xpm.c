@@ -16,6 +16,8 @@ extern struct s_col_name mlx_col_name[];
 
 #define	RETURN	{ if (colors) free(colors); if (tab) free(tab); \
 		tab = (void *)0; if (colors_direct) free(colors_direct); \
+		if (clip_img) XDestroyImage(clip_img); \
+		else if (clip_data) free(clip_data); \
 		if (img) {XDestroyImage(img->image); \
 				XFreePixmap(xvar->display,img->pix);free(img);} \
 		return ((void *)0);}
@@ -164,6 +166,8 @@ void	*mlx_int_parse_xpm(t_xvar *xvar,void *info,int info_size,char *(*f)())
 		img = 0;
 		tab = 0;
 		pos = 0;
+		clip_img = 0;
+
 		if (!(line = f(info,&pos,info_size)) ||
 						!(tab = mlx_int_str_to_wordtab(line)) || !(width = atoi(tab[0])) ||
 						!(height = atoi(tab[1])) || !(nc = atoi(tab[2])) ||
@@ -273,6 +277,7 @@ void	*mlx_int_parse_xpm(t_xvar *xvar,void *info,int info_size,char *(*f)())
 								GCPlaneMask, &xgcv);
 				XSync(xvar->display, False);
 				XDestroyImage(clip_img);
+				img->clip_pix = clip_pix;
 		}
 
 		if (colors)
